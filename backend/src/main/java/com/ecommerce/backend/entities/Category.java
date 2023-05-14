@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "CATEGORIES")
-public class Category {
+public class Category implements NamedEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

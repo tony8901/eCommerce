@@ -36,7 +36,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Product product){
-        return productService.save(product);
+        return productService.saveWithoutCheckName(product);
     }
 
     @DeleteMapping("/delete-id/{id}")

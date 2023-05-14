@@ -3,9 +3,12 @@ package com.ecommerce.backend.entities;
 import com.ecommerce.backend.security.entities.User;
 import jakarta.persistence.*;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "VENDORS")
-public class Vendor implements AppUser{
+public class Vendor implements NamedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,9 +26,20 @@ public class Vendor implements AppUser{
     @Column
     private String personalAddress;
 
+    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Product> products = new LinkedHashSet<>();
+
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     User user;
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
 
     public void setId(Long id) {
         this.id = id;

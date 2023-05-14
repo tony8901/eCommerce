@@ -2,17 +2,11 @@ package com.ecommerce.backend.services;
 
 import com.ecommerce.backend.entities.Category;
 import com.ecommerce.backend.repositories.CategoryRepository;
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
-import org.hibernate.exception.ConstraintViolationException;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLDataException;
-import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Optional;
 
 @Service
