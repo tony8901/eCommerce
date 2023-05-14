@@ -1,5 +1,7 @@
 package com.ecommerce.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
@@ -7,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "PRODUCTS")
-public class Product {
+public class Product implements NamedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,6 +24,16 @@ public class Product {
     @Column
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
+    @JsonIgnore
+    private Vendor vendor;
+
+    @JsonProperty("vendor_id")
+    public Long getVendorId() {
+        return vendor != null ? vendor.getId() : null;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -35,6 +47,14 @@ public class Product {
             joinColumns = @JoinColumn(name = "products_id"),
             inverseJoinColumns = @JoinColumn(name = "categories_id"))
     private Set<Category> categories = new LinkedHashSet<>();
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
 
     public Set<Category> getCategories() {
         return categories;
