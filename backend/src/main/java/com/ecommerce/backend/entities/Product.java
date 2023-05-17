@@ -24,15 +24,15 @@ public class Product implements NamedEntity {
     @Column
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "vendor_id")
-    @JsonIgnore
-    private Vendor vendor;
-
     @JsonProperty("vendor_id")
     public Long getVendorId() {
         return vendor != null ? vendor.getId() : null;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
+    @JsonIgnore
+    private Vendor vendor;
 
     public String getDescription() {
         return description;
@@ -48,16 +48,16 @@ public class Product implements NamedEntity {
             inverseJoinColumns = @JoinColumn(name = "categories_id"))
     private Set<Category> categories = new LinkedHashSet<>();
 
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
     public Vendor getVendor() {
         return vendor;
     }
 
     public void setVendor(Vendor vendor) {
         this.vendor = vendor;
-    }
-
-    public Set<Category> getCategories() {
-        return categories;
     }
 
     public void setCategories(Set<Category> categories) {
