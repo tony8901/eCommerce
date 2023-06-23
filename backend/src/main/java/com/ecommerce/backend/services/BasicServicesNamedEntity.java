@@ -5,6 +5,7 @@ import com.ecommerce.backend.repositories.BasicRepositoryWithName;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BasicServicesNamedEntity<T extends NamedEntity, ID> {
@@ -46,10 +47,18 @@ public class BasicServicesNamedEntity<T extends NamedEntity, ID> {
 
     public ResponseEntity<?> findByName(String name) {
         try {
-            Optional<Object> optional = Optional.ofNullable(basicRepositoryWithName.findByName(name));
-            return optional.map(
-                            o -> new ResponseEntity<>(o, HttpStatus.OK))
-                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with name: " + name));
+            List<T> elements = basicRepositoryWithName.findByNameIgnoreCase(name);
+
+            return elements.isEmpty()
+                    ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with name: " + name)
+                    : ResponseEntity.ok(elements);
+
+
+//            Optional<Object> optional = Optional.ofNullable(basicRepositoryWithName.findByNameIgnoreCase(name));
+//            return optional.map(
+//                            o -> new ResponseEntity<>(o, HttpStatus.OK))
+//                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with name: " + name));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something is wrong! -> " + e.getMessage());
         }
@@ -57,10 +66,19 @@ public class BasicServicesNamedEntity<T extends NamedEntity, ID> {
 
     public ResponseEntity<?> findById(ID id) {
         try {
-            if(basicRepositoryWithName.existsById(id)){
-                return ResponseEntity.status(HttpStatus.OK).body(basicRepositoryWithName.findById(id));
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with id: " + id);
+
+            return basicRepositoryWithName.existsById(id)
+                    ? ResponseEntity.ok(basicRepositoryWithName.findById(id))
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with id: " + id);
+
+//            Optional<Object> optional = Optional.of(basicRepositoryWithName.findById(id));
+//            return optional.map(ResponseEntity::ok)
+//                    .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with id: " + id));
+
+//            if(basicRepositoryWithName.existsById(id)){
+//                return ResponseEntity.status(HttpStatus.OK).body(basicRepositoryWithName.findById(id));
+//            }
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with id: " + id);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something is wrong! -> " + e.getMessage());
         }
@@ -74,7 +92,7 @@ public class BasicServicesNamedEntity<T extends NamedEntity, ID> {
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NAME_ENTITY+" not found with id: " + id);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something is wrong! -> " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something is wrong! -> " + e.getCause());
         }
     }
 
@@ -89,5 +107,6 @@ public class BasicServicesNamedEntity<T extends NamedEntity, ID> {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Something is wrong! -> " + e.getMessage());
         }
     }
+
 
 }

@@ -5,9 +5,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import java.util.List;
+
 @NoRepositoryBean
 public interface BasicRepositoryWithName<T extends NamedEntity, ID> extends JpaRepository<T, ID> {
-    T findByName(String name);
+    List<T> findByNameIgnoreCase(String name);
 
     boolean existsByName(String name);
 
